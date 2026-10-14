@@ -1,0 +1,242 @@
+
+#include <iostream>
+using namespace std;
+
+// Q1. Singly Linked List
+
+class SNode {
+public:
+    int data;
+    SNode* next;
+
+    SNode(int data) {
+        this->data = data;
+        next = NULL;
+    }
+};
+
+SNode* head = NULL;
+
+void insertAtHead(int data) {
+    SNode* newNode = new SNode(data);
+    newNode->next = head;
+    head = newNode;
+}
+
+void insertAtTail(int data) {
+    SNode* newNode = new SNode(data);
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
+    SNode* temp = head;
+
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+}
+
+void insertAtIndex(int data, int index) {
+    if (index < 0) {
+        cout << "Invalid index!" << endl;
+        return;
+    }
+
+    if (index == 0) {
+        insertAtHead(data);
+        return;
+    }
+
+    SNode* temp = head;
+
+    for (int i = 0; i < index - 1 && temp != NULL; i++) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        cout << "Invalid index!" << endl;
+        return;
+    }
+
+    SNode* newNode = new SNode(data);
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+void deleteSLL(int data) {
+    if (head == NULL) {
+        cout << "List is empty!" << endl;
+        return;
+    }
+
+    if (head->data == data) {
+        SNode* temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
+
+    SNode* temp = head;
+
+    while (temp->next != NULL && temp->next->data != data) {
+        temp = temp->next;
+    }
+
+    if (temp->next == NULL) {
+        cout << "Data not found!" << endl;
+    } else {
+        SNode* delNode = temp->next;
+        temp->next = delNode->next;
+        delete delNode;
+    }
+}
+
+void displaySLL() {
+    SNode* temp = head;
+
+    while (temp != NULL) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+
+    cout << "NULL" << endl;
+}
+
+// Q2. Doubly Linked List
+
+class DNode {
+public:
+    int data;
+    DNode* prev;
+    DNode* next;
+
+    DNode(int data) {
+        this->data = data;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+DNode* dHead = NULL;
+DNode* dTail = NULL;
+
+void insertDLL(int data) {
+    DNode* newNode = new DNode(data);
+
+    if (dHead == NULL) {
+        dHead = dTail = newNode;
+        return;
+    }
+
+    dTail->next = newNode;
+    newNode->prev = dTail;
+    dTail = newNode;
+}
+
+void deleteDLL(int data) {
+    DNode* temp = dHead;
+
+    while (temp != NULL && temp->data != data) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        cout << "Data not found!" << endl;
+        return;
+    }
+
+    if (temp == dHead) {
+        dHead = temp->next;
+
+        if (dHead != NULL) {
+            dHead->prev = NULL;
+        }
+    } else {
+        temp->prev->next = temp->next;
+
+        if (temp->next != NULL) {
+            temp->next->prev = temp->prev;
+        }
+    }
+
+    if (temp == dTail) {
+        dTail = temp->prev;
+    }
+
+    delete temp;
+}
+
+void displayForward() {
+    DNode* temp = dHead;
+
+    while (temp != NULL) {
+        cout << temp->data << " <-> ";
+        temp = temp->next;
+    }
+
+    cout << "NULL" << endl;
+}
+
+void displayReverse() {
+    DNode* temp = dTail;
+
+    while (temp != NULL) {
+        cout << temp->data << " <-> ";
+        temp = temp->prev;
+    }
+
+    cout << "NULL" << endl;
+}
+
+int main() {
+    cout << "===== SINGLY LINKED LIST =====" << endl;
+
+    insertAtHead(20);
+    insertAtHead(10);
+    insertAtTail(40);
+    insertAtIndex(30, 2);
+
+    cout << "SLL:" << endl;
+    displaySLL();
+
+    int sData;
+    cout << "Enter data to delete from SLL: ";
+    cin >> sData;
+
+    deleteSLL(sData);
+
+    cout << "SLL after deletion:" << endl;
+    displaySLL();
+
+    cout << endl << "===== DOUBLY LINKED LIST =====" << endl;
+
+    insertDLL(10);
+    insertDLL(20);
+    insertDLL(30);
+    insertDLL(40);
+
+    cout << "Forward Traversal:" << endl;
+    displayForward();
+
+    cout << "Reverse Traversal:" << endl;
+    displayReverse();
+
+    int dData;
+    cout << "Enter data to delete from DLL: ";
+    cin >> dData;
+
+    deleteDLL(dData);
+
+    cout << "DLL after deletion:" << endl;
+
+    cout << "Forward:" << endl;
+    displayForward();
+
+    cout << "Reverse:" << endl;
+    displayReverse();
+
+    return 0;
