@@ -1,0 +1,247 @@
+
+#include <iostream>
+using namespace std;
+
+// Stack using Array
+int stackArr[5];
+int top = -1;
+
+void pushArray(int value) {
+    if (top == 4) {
+        cout << "Stack Overflow" << endl;
+    } else {
+        stackArr[++top] = value;
+        cout << value << " pushed" << endl;
+    }
+}
+
+void popArray() {
+    if (top == -1) {
+        cout << "Stack Underflow" << endl;
+    } else {
+        cout << stackArr[top--] << " popped" << endl;
+    }
+}
+
+void displayArrayStack() {
+    if (top == -1) {
+        cout << "Stack is empty" << endl;
+    } else {
+        cout << "Stack elements:" << endl;
+        for (int i = top; i >= 0; i--) {
+            cout << stackArr[i] << endl;
+        }
+    }
+}
+
+// Stack using Linked List
+struct StackNode {
+    int data;
+    StackNode* next;
+
+    StackNode(int value) {
+        data = value;
+        next = NULL;
+    }
+};
+
+StackNode* stackTop = NULL;
+
+void pushLinked(int value) {
+    StackNode* newNode = new StackNode(value);
+    newNode->next = stackTop;
+    stackTop = newNode;
+    cout << value << " pushed" << endl;
+}
+
+void popLinked() {
+    if (stackTop == NULL) {
+        cout << "Stack Underflow" << endl;
+    } else {
+        StackNode* temp = stackTop;
+        cout << temp->data << " popped" << endl;
+        stackTop = stackTop->next;
+        delete temp;
+    }
+}
+
+void displayLinkedStack() {
+    if (stackTop == NULL) {
+        cout << "Stack is empty" << endl;
+    } else {
+        cout << "Stack elements:" << endl;
+        StackNode* temp = stackTop;
+
+        while (temp != NULL) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+    }
+}
+
+// Queue using Array
+int queueArr[5];
+int front = -1, rear = -1;
+
+void enqueueArray(int value) {
+    if (rear == 4) {
+        cout << "Queue Overflow" << endl;
+    } else {
+        if (front == -1) {
+            front = 0;
+        }
+
+        queueArr[++rear] = value;
+        cout << value << " inserted" << endl;
+    }
+}
+
+void dequeueArray() {
+    if (front == -1 || front > rear) {
+        cout << "Queue Underflow" << endl;
+    } else {
+        cout << queueArr[front++] << " deleted" << endl;
+
+        if (front > rear) {
+            front = rear = -1;
+        }
+    }
+}
+
+void displayArrayQueue() {
+    if (front == -1) {
+        cout << "Queue is empty" << endl;
+    } else {
+        cout << "Queue elements:" << endl;
+
+        for (int i = front; i <= rear; i++) {
+            cout << queueArr[i] << endl;
+        }
+    }
+}
+
+// Queue using Linked List
+struct QueueNode {
+    int data;
+    QueueNode* next;
+
+    QueueNode(int value) {
+        data = value;
+        next = NULL;
+    }
+};
+
+QueueNode* queueFront = NULL;
+QueueNode* queueRear = NULL;
+
+void enqueueLinked(int value) {
+    QueueNode* newNode = new QueueNode(value);
+
+    if (queueRear == NULL) {
+        queueFront = queueRear = newNode;
+    } else {
+        queueRear->next = newNode;
+        queueRear = newNode;
+    }
+
+    cout << value << " inserted" << endl;
+}
+
+void dequeueLinked() {
+    if (queueFront == NULL) {
+        cout << "Queue Underflow" << endl;
+    } else {
+        QueueNode* temp = queueFront;
+        cout << temp->data << " deleted" << endl;
+
+        queueFront = queueFront->next;
+
+        if (queueFront == NULL) {
+            queueRear = NULL;
+        }
+
+        delete temp;
+    }
+}
+
+void displayLinkedQueue() {
+    if (queueFront == NULL) {
+        cout << "Queue is empty" << endl;
+    } else {
+        cout << "Queue elements:" << endl;
+        QueueNode* temp = queueFront;
+
+        while (temp != NULL) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+    }
+}
+
+int main() {
+    int choice, ch, value;
+
+    while (true) {
+        cout << "\n===== STACK AND QUEUE =====" << endl;
+        cout << "1. Stack using Array" << endl;
+        cout << "2. Stack using Linked List" << endl;
+        cout << "3. Queue using Array" << endl;
+        cout << "4. Queue using Linked List" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 5) {
+            cout << "Program ended." << endl;
+            break;
+        }
+
+        if (choice < 1 || choice > 4) {
+            cout << "Invalid choice" << endl;
+            continue;
+        }
+
+        while (true) {
+            cout << "\n1. Insert / Push / Enqueue" << endl;
+            cout << "2. Delete / Pop / Dequeue" << endl;
+            cout << "3. Display" << endl;
+            cout << "4. Back" << endl;
+            cout << "Enter choice: ";
+            cin >> ch;
+
+            if (ch == 4) {
+                break;
+            }
+
+            if (ch < 1 || ch > 4) {
+                cout << "Invalid choice" << endl;
+                continue;
+            }
+
+            if (ch == 1) {
+                cout << "Enter value: ";
+                cin >> value;
+            }
+
+            if (choice == 1) {
+                if (ch == 1) pushArray(value);
+                else if (ch == 2) popArray();
+                else displayArrayStack();
+            } else if (choice == 2) {
+                if (ch == 1) pushLinked(value);
+                else if (ch == 2) popLinked();
+                else displayLinkedStack();
+            } else if (choice == 3) {
+                if (ch == 1) enqueueArray(value);
+                else if (ch == 2) dequeueArray();
+                else displayArrayQueue();
+            } else {
+                if (ch == 1) enqueueLinked(value);
+                else if (ch == 2) dequeueLinked();
+                else displayLinkedQueue();
+            }
+        }
+    }
+
+    return 0;
+}
